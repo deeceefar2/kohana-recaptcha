@@ -2,13 +2,18 @@
 class Kohana_Recaptcha {
 	protected $_config;
 	protected $_error = NULL;
-	public function __construct($config = NULL)
+	public function __construct(array $config = NULL)
 	{
+		$this->_config = $config;
+
+		if ($config === NULL)
+		{
+			// Load the configuration for this database
+			$this->_config = Kohana::$config->load('recaptcha')->default;
+		}
+
 		include_once Kohana::find_file('vendor', 'recaptcha/recaptchalib');
-		$this->_config= Kohana::config('recaptcha');
-		
-		if(is_array($config))
-			$this->_config = Arr::overwrite($this->_config,$config);
+
 		return $this;
 	}
 	public function check($answers,$fields=array("recaptcha_challenge_field","recaptcha_response_field"))
@@ -28,5 +33,8 @@ class Kohana_Recaptcha {
 	public function html()
 	{
 		return recaptcha_get_html($this->_config['public_key'], $this->_error);
+	}
+	public function public_key() {
+		return $this->_config['public_key'];
 	}
 }
