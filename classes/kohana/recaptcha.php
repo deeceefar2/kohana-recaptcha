@@ -37,4 +37,14 @@ class Kohana_Recaptcha {
 	public function public_key() {
 		return $this->_config['public_key'];
 	}
+
+	public static function validRecaptcha($subject) {
+		$Recaptcha = new Recaptcha();
+
+		if($Recaptcha->check($_POST)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
