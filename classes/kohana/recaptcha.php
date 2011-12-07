@@ -19,7 +19,7 @@ class Kohana_Recaptcha {
 	public function check($answers,$fields=array("recaptcha_challenge_field","recaptcha_response_field"))
 	{
 		$recaptcha_resp = recaptcha_check_answer($this->_config['private_key'],
-													$_SERVER['REMOTE_ADDR'],
+													Request::$client_ip,
 													$answers[$fields[0]],
 													$answers[$fields[1]]);
 
@@ -41,10 +41,6 @@ class Kohana_Recaptcha {
 	public static function validRecaptcha($subject) {
 		$Recaptcha = new Recaptcha();
 
-		if($Recaptcha->check($_POST)) {
-			return true;
-		} else {
-			return false;
-		}
+		return $Recaptcha->check($subject);
 	}
 }
